@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Crisutf TV+ - Mantenimiento</title>
+    <link rel="icon" type="image/png" href="/media/favicon.png" />
+    <link href="https://fonts.cdnfonts.com/css/pf-dindisplay-pro-black-2" rel="stylesheet" />
+    <link rel="stylesheet" href="/assets/css/icon-styles.css" />
+    <style>
+        :root {
+            --primary: #6366f1;          /* Color principal */
+            --primary-light: #818cf8;    /* Color principal claro */
+            --primary-dark: #4f46e5;     /* Color principal oscuro */
+            --accent: #ec4899;           /* Color de acento */
+            --accent-light: #f472b6;     /* Color de acento claro */
+            --bg-dark: #0f0f1a;          /* Fondo principal oscuro */
+            --bg-sidebar: #1a1a2e;       /* Fondo de la barra lateral */
+            --text: #f8fafc;             /* Texto principal */
+            --text-secondary: #a5b4fc;   /* Texto secundario */
+            --border: #2d2d42;           /* Bordes */
+            --card-bg: rgba(30, 30, 60, 0.5); /* Fondo de tarjetas */
+            --card-hover: rgba(40, 40, 80, 0.8); /* Hover de tarjetas */
+            --danger: #ef4444;
+            --success: #10b981;          /* Color de éxito */
+            --error: #ef4444;            /* Color de error */
+            --warning: #f59e0b;          /* Color de advertencia */
+            --border-color: var(--border);
+            --shadow: 0 8px 24px rgba(0, 0, 0, 0.3); /* Sombras */
+            --gradient-1: linear-gradient(135deg, var(--primary-light), var(--accent-light)); /* Gradiente 1 */
+            --gradient-2: linear-gradient(135deg, var(--primary), var(--accent)); /* Gradiente 2 */
+            --header-bg: rgba(15, 15, 26, 0.95); /* Fondo del encabezado */
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'PF DinDisplay Pro Black', sans-serif;
+        }
+
+        body {
+            background: var(--bg-dark);
+            color: var(--text);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .logo {
+            width: 100px;
+            height: 100px;
+            margin-bottom: 20px;
+            border-radius: 15px;
+        }
+
+        .title {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .error-code {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--error);
+        }
+
+        .message {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            max-width: 600px;
+        }
+
+        .countdown {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary);
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 15px 25px;
+            border-radius: 10px;
+            max-width: 350px;
+        }
+
+        .btn {
+            background: var(--primary);
+            color: var(--text);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background 0.3s ease;
+        }
+
+        .btn:hover {
+            background: #0d5bbd;
+        }
+    </style>
+</head>
+<body>
+    <img src="/media/logo.png" alt="Logo" class="logo" />
+    <h1 class="title">Crisutf TV+</h1>
+    <div class="error-code">Página en Mantenimiento</div>
+    <p class="message">
+        El acceso a este contenido está temporalmente deshabilitado debido a tareas de mantenimiento. Estará disponible nuevamente cuando finalicen los trabajos.
+    </p>
+    <div class="countdown" id="countdown">Calculando tiempo restante...</div>
+
+    <script>
+    // Fecha y hora fin mantenimiento: 1 septiembre 2023, 14:30 (hora España de verano, UTC+2)
+    // En UTC sería 2023-09-01T12:30:00Z
+    const endDate = new Date('2025-09-01T12:30:00Z');
+
+    function updateCountdown() {
+        const now = new Date();
+        const diff = endDate - now;
+
+        if (diff <= 0) {
+            document.getElementById('countdown').textContent = "El mantenimiento ha finalizado. Gracias por su paciencia.";
+            clearInterval(timer);
+            return;
+        }
+
+        const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+        const minutes = Math.floor((diff / (1000 * 60)) % 60);
+        const seconds = Math.floor((diff / 1000) % 60);
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+
+        let timeString = '';
+        if (days > 0) timeString += days + (days === 1 ? ' día, ' : ' días, ');
+        timeString +=
+            hours.toString().padStart(2, '0') + ':' +
+            minutes.toString().padStart(2, '0') + ':' +
+            seconds.toString().padStart(2, '0');
+
+        document.getElementById('countdown').textContent =
+            'Tiempo restante para fin del mantenimiento en ' + timeString;
+    }
+
+    updateCountdown();
+    const timer = setInterval(updateCountdown, 1000);
+</script>
+</body>
+</html>

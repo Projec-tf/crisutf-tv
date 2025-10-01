@@ -1,0 +1,264 @@
+
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crisutf TV+ - Redirección</title>
+    <link rel="icon" type="image/png" href="/media/favicon.png">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/icon-styles.css">
+    <style>
+        :root {
+            --primary: #6366f1;          /* Color principal */
+            --primary-light: #818cf8;    /* Color principal claro */
+            --primary-dark: #4f46e5;     /* Color principal oscuro */
+            --accent: #ec4899;           /* Color de acento */
+            --accent-light: #f472b6;     /* Color de acento claro */
+            --bg-dark: #0f0f1a;          /* Fondo principal oscuro */
+            --bg-sidebar: #1a1a2e;       /* Fondo de la barra lateral */
+            --text: #f8fafc;             /* Texto principal */
+            --text-secondary: #a5b4fc;   /* Texto secundario */
+            --border: #2d2d42;           /* Bordes */
+            --card-bg: rgba(30, 30, 60, 0.5); /* Fondo de tarjetas */
+            --card-hover: rgba(40, 40, 80, 0.8); /* Hover de tarjetas */
+            --danger: #ef4444;
+            --success: #10b981;          /* Color de éxito */
+            --error: #ef4444;            /* Color de error */
+            --warning: #f59e0b;          /* Color de advertencia */
+            --border-color: var(--border);
+            --shadow: 0 8px 24px rgba(0, 0, 0, 0.3); /* Sombras */
+            --gradient-1: linear-gradient(135deg, var(--primary-light), var(--accent-light)); /* Gradiente 1 */
+            --gradient-2: linear-gradient(135deg, var(--primary), var(--accent)); /* Gradiente 2 */
+            --header-bg: rgba(15, 15, 26, 0.95); /* Fondo del encabezado */
+            }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'PF DinDisplay Pro Black', sans-serif;
+        }
+
+        /* Añadimos estilos para la transición */
+        body {
+            background: var(--bg-dark);
+            color: var(--text);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            opacity: 0; /* Iniciamos con opacidad 0 */
+            transition: opacity 5s ease, background 3s ease; /* Transición de 5 segundos */
+            position: relative;
+            overflow: hidden;
+        }
+        
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient-2);
+            opacity: 0.05;
+            z-index: -1;
+        }
+
+        .logo {
+            width: 100px;
+            height: 100px;
+            margin-bottom: 20px;
+            border-radius: 15px;
+        }
+
+        .title {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .message {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            max-width: 600px;
+            color: var(--text-secondary);
+        }
+
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+            padding: 10px;
+            background: var(--card-bg);
+            border-radius: 50%;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            border-top-color: var(--primary);
+            border-right-color: var(--primary-light);
+            border-bottom-color: var(--accent);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        .device-info {
+            margin-top: 20px;
+            padding: 10px 15px;
+            background: var(--card-bg);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            max-width: 80%;
+            box-shadow: var(--shadow);
+        }
+
+        .device-info p {
+            margin: 5px 0;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .logo, .title, .message, .loading, .device-info {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 1s ease, transform 1s ease;
+        }
+        
+        .device-info strong {
+            color: var(--accent-light);
+        }
+
+        .fade-in {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .redirect-transition::before {
+            opacity: 0.2;
+            background: var(--gradient-1);
+            transition: opacity 3s ease, background 3s ease;
+        }
+    </style>
+</head>
+<body>
+    <img src="/media/logo.png" alt="Logo" class="logo">
+    <h1 class="title">Crisutf TV+</h1>
+    <p class="message">Detectando tu dispositivo para ofrecerte la mejor experiencia para que tu disfrutes...</p>
+    
+    <div class="loading">
+        <div class="spinner"></div>
+    </div>
+
+    <div id="deviceInfo" class="device-info" style="display: none;">
+        <p><strong>Información del dispositivo:</strong></p>
+        <p id="userAgent"></p>
+        <p id="screenSize"></p>
+        <p id="deviceType"></p>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Hacemos visible el contenido con una transición suave
+            document.body.style.opacity = '1';
+
+            // Función para animar elementos secuencialmente
+            function animateElements() {
+                const elements = [
+                    document.querySelector('.logo'),
+                    document.querySelector('.title'),
+                    document.querySelector('.message'),
+                    document.querySelector('.loading')
+                ];
+
+                elements.forEach((element, index) => {
+                    setTimeout(() => {
+                        element.classList.add('fade-in');
+                    }, index * 1000); // Cada elemento aparece con 1 segundo de diferencia
+                });
+            }
+
+            // Iniciamos la animación después de un breve retraso
+            setTimeout(animateElements, 500);
+
+            function detectDevice() {
+                const userAgent = navigator.userAgent.toLowerCase();
+                let redirectPath = '';
+                let deviceType = '';
+                
+                // Detectar Smart TV
+                if (
+                    userAgent.includes('smart-tv') || 
+                    userAgent.includes('smarttv') || 
+                    userAgent.includes('android tv') || 
+                    userAgent.includes('apple tv') || 
+                    userAgent.includes('googletv') || 
+                    userAgent.includes('fire tv') || 
+                    userAgent.includes('roku') ||
+                    userAgent.includes('webos') ||
+                    userAgent.includes('tizen') ||
+                    (window.innerWidth > 1200 && /tv|television/.test(userAgent))
+                ) {
+                    redirectPath = '/devices/tv/';
+                    deviceType = 'Smart TV';
+                } 
+                // Detectar móvil/tablet
+                else if (
+                    /android|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(userAgent) || 
+                    (window.innerWidth <= 768)
+                ) {
+                    redirectPath = '/devices/mobile/';
+                    deviceType = window.innerWidth <= 480 ? 'Móvil' : 'Tablet';
+                } 
+                // Detectar PC/Laptop
+                else {
+                    redirectPath = '/devices/pc/';
+                    deviceType = 'PC/Laptop';
+                }
+                
+                // Mostrar información del dispositivo con transición
+                const deviceInfo = document.getElementById('deviceInfo');
+                deviceInfo.style.display = 'block';
+                
+                document.getElementById('userAgent').textContent = 'User Agent: ' + navigator.userAgent;
+                document.getElementById('screenSize').textContent = 'Resolución: ' + window.innerWidth + 'x' + window.innerHeight;
+                document.getElementById('deviceType').textContent = 'Tipo de dispositivo: ' + deviceType;
+                
+                // Mostramos la información del dispositivo con fade in
+                setTimeout(() => {
+                    deviceInfo.classList.add('fade-in');
+                }, 4000); // Aparece después de los otros elementos
+                
+                // Redirigir con transición de fade out
+                setTimeout(function() {
+                    document.body.style.opacity = '0';
+                    document.body.style.background = 'var(--primary-dark)';
+                    // No podemos seleccionar pseudo-elementos con querySelector
+                    // Añadimos una clase para cambiar la opacidad
+                    document.body.classList.add('redirect-transition');
+                    setTimeout(() => {
+                        window.location.href = redirectPath;
+                    }, 5000); // Esperamos a que termine la transición
+                }, 10000); // Aumentamos el tiempo antes de la redirección
+            }
+            
+            detectDevice();
+        });
+    </script>
+<!-- Cloudflare Pages Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "1a1e183c5ac64942b467d6ca3e1ee553"}'></script><!-- Cloudflare Pages Analytics --></body>
+</html>
