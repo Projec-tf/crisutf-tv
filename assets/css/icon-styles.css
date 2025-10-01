@@ -1,0 +1,55 @@
+.svg-icon {
+  width: 24px;
+  height: 24px;
+  vertical-align: middle;
+  color: white;
+}
+
+.svg-icon-small {
+  width: 16px;
+  height: 16px;
+  vertical-align: middle;
+  color: white;
+}
+
+.feature-icon img,
+.device-icon img,
+.download-icon img {
+  width: 32px;
+  height: 32px;
+  fill: white;
+  stroke: white;
+}
+
+.check-icon img,
+.info-icon img,
+.cta-icon img,
+.feature-box-icon img {
+  width: 18px;
+  height: 18px;
+  fill: white;
+  stroke: white;
+}
+
+/* Establecemos el color blanco para todos los iconos SVG */
+.svg-icon, .svg-icon-small, img.svg-icon, img.svg-icon-small {
+  fill: white;
+  stroke: white;
+}
+
+/* Aseguramos que todos los SVG dentro de imágenes sean blancos */
+img[src$=".svg"]:not([src*="spain-flag"]) {
+  filter: brightness(0) invert(1);
+}
+
+/* Permitimos que la bandera de España muestre sus colores originales */
+img[src*="spain-flag.svg"] {
+  filter: none;
+}
+
+/* Ajustes específicos para ciertos contenedores */
+.feature-icon, .device-icon, .download-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

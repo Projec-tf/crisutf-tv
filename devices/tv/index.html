@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crisutf TV+</title>
+    <link rel="icon" type="image/png" href="/media/favicon.png">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+        <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <style>
+        :root {
+            /* Esquema de colores premium */
+            --primary: #6366f1;          /* Color principal */
+            --primary-light: #818cf8;    /* Color principal claro */
+            --primary-dark: #4f46e5;     /* Color principal oscuro */
+            --accent: #ec4899;           /* Color de acento */
+            --accent-light: #f472b6;     /* Color de acento claro */
+            --bg-dark: #0f0f1a;          /* Fondo principal oscuro */
+            --bg-sidebar: #1a1a2e;       /* Fondo de la barra lateral */
+            --text: #f8fafc;             /* Texto principal */
+            --text-secondary: #a5b4fc;   /* Texto secundario */
+            --border: #2d2d42;           /* Bordes */
+            --card-bg: rgba(30, 30, 60, 0.5); /* Fondo de tarjetas */
+            --card-hover: rgba(40, 40, 80, 0.8); /* Hover de tarjetas */
+            --danger: #ef4444;
+            --success: #10b981;          /* Color de éxito */
+            --error: #ef4444;            /* Color de error */
+            --warning: #f59e0b;          /* Color de advertencia */
+            --border-color: var(--border);
+            --shadow: 0 8px 24px rgba(0, 0, 0, 0.3); /* Sombras */
+            --gradient-1: linear-gradient(135deg, var(--primary-light), var(--accent-light)); /* Gradiente 1 */
+            --gradient-2: linear-gradient(135deg, var(--primary), var(--accent)); /* Gradiente 2 */
+            --header-bg: rgba(15, 15, 26, 0.95); /* Fondo del encabezado */
+            --focus-outline: 4px solid rgba(99, 102, 241, 0.8); /* Contorno para elementos enfocados */
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: var(--bg-dark);
+            color: var(--text);
+            height: 100vh;
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            overflow: hidden;
+        }
+
+        .top-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 72px;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(12px);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 32px;
+            z-index: 1000;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .app-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .app-logo {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            border: 0px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .app-logo:hover {
+            transform: scale(1.05);
+        }
+
+        .app-name {
+            font-size: 1.5em;
+            font-weight: 600;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+            text-shadow: 0 2px 10px rgba(99, 102, 241, 0.3);
+        }
+
+        .current-info {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+        }
+
+        .datetime-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 4px;
+        }
+
+        .date {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .clock {
+            font-size: 1.25rem;
+            font-weight: 500;
+            color: var(--text);
+        }
+
+        .sidebar {
+            background: var(--bg-sidebar);
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            border-right: 1px solid var(--border);
+            height: 100vh;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: var(--primary) var(--bg-sidebar);
+        }
+
+        .sidebar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .sidebar::-webkit-scrollbar-track {
+            background: var(--bg-sidebar);
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background-color: var(--primary);
+            border-radius: 3px;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .brand {
+            font-size: 1.5rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, var(--primary-light), #60a5fa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .channels {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .channel {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px;
+            background: rgba(30, 41, 59, 0.5);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .channel:hover {
+            background: rgba(30, 41, 59, 0.8);
+            transform: translateX(8px);
+            border-color: var(--primary-light);
+        }
+
+        .channel.active {
+            background: var(--primary);
+            border-color: var(--primary-light);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+        }
+
+        .channel-number {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary-light);
+            min-width: 32px;
+        }
+
+        .channel-name {
+            font-weight: 500;
+            color: var(--text);
+        }
+
+        .main-content {
+            position: relative;
+            margin-top: 72px;
+            height: calc(100vh - 72px);
+        }
+
+        #videoPlayer {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background: var(--bg-dark);
+        }
+
+        .video-controls {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 30px;
+            background: var(--gradient-overlay);
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .main-content:hover .video-controls,
+        .video-controls.show {
+            opacity: 1;
+        }
+
+
+        .control-button {
+            background: rgba(255, 255, 255, 0.15);
+            border: none;
+            color: var(--text);
+            cursor: pointer;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            font-size: 1.5rem;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+        }
+
+        .control-button:hover, .control-button:focus {
+            background: var(--primary);
+            transform: scale(1.05);
+        }
+
+        .progress-bar {
+            flex: 1;
+            height: 6px;
+            background: rgba(148, 163, 184, 0.2);
+            border-radius: 3px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress {
+            height: 100%;
+            background: var(--primary);
+            border-radius: 3px;
+            width: 0;
+            transition: width 0.1s linear;
+        }
+
+        .loading-indicator {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+            display: none;
+        }
+
+        .loading-indicator .spinner {
+            width: 56px;
+            height: 56px;
+            border: 5px solid rgba(37, 99, 235, 0.1);
+            border-radius: 50%;
+            border-top-color: var(--primary);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        .loading-text {
+            color: var(--text);
+            font-size: 1.25rem;
+            font-weight: 500;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                height: 160px;
+                z-index: 100;
+                padding: 16px;
+            }
+
+            .channels {
+                flex-direction: row;
+                overflow-x: auto;
+                overflow-y: hidden;
+                padding-bottom: 8px;
+                scrollbar-width: thin;
+                scrollbar-color: var(--primary) var(--bg-sidebar);
+            }
+
+            .channels::-webkit-scrollbar {
+                height: 6px;
+            }
+
+            .channels::-webkit-scrollbar-track {
+                background: var(--bg-sidebar);
+            }
+
+            .channels::-webkit-scrollbar-thumb {
+                background-color: var(--primary);
+                border-radius: 3px;
+            }
+
+            .channel {
+                min-width: 220px;
+                flex-shrink: 0;
+            }
+
+            .channel:hover {
+                transform: translateY(-4px);
+            }
+
+            .top-bar {
+                padding: 0 20px;
+            }
+
+            .current-info {
+                gap: 16px;
+            }
+
+            .datetime-info {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <div class="app-info">
+            <img src="/media/logo.png" alt="Logo" class="app-logo">
+            <span class="app-name">Crisutf TV+</span>
+        </div>
+        <div class="current-info">
+            <h2 id="currentChannel">Sin canal seleccionado</h2>
+            <div class="datetime-info">
+                <span class="date" id="date"></span>
+                <span class="clock" id="clock"></span>
+            </div>
+        </div>
+    </div>
+
+    <aside class="sidebar">
+        <div class="header">
+            <span class="brand">Lista de Canales</span>
+        </div>
+        <div class="channels" id="channelList"></div>
+    </aside>
+
+    <main class="main-content">
+        <video id="videoPlayer"></video>
+        <div class="video-controls">
+            <button class="control-button" id="playPause">▶</button>
+            <div class="progress-bar" id="progressBar">
+                <div class="progress" id="progress"></div>
+            </div>
+            <button class="control-button" id="fullscreen">⛶</button>
+        </div>
+    </main>
+
+    <script>
+        const videoPlayer = document.getElementById('videoPlayer');
+        const playPauseBtn = document.getElementById('playPause');
+        const fullscreenBtn = document.getElementById('fullscreen');
+        const progressBar = document.getElementById('progressBar');
+        const progress = document.getElementById('progress');
+        const currentChannelDisplay = document.getElementById('currentChannel');
+
+        // Iniciar en pantalla completa al cargar
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                // Solicitar pantalla completa al cargar
+                document.documentElement.requestFullscreen().catch(() => {
+                    console.log('No se pudo activar pantalla completa automáticamente');
+                });
+
+                const response = await fetch('/files/v2.0/index.m3u');
+                if (!response.ok) throw new Error('No se pudo cargar la lista de canales');
+                const content = await response.text();
+                const channels = parseM3U(content);
+                displayChannels(channels);
+            } catch (error) {
+                document.getElementById('channelList').innerHTML = `
+                    <div style="color: #ff4444; padding: 20px;">
+                        Error: ${error.message}
+                    </div>`;
+            }
+        });
+
+        function parseM3U(content) {
+            const lines = content.split('\n');
+            const channels = [];
+            let currentChannel = null;
+
+            lines.forEach(line => {
+                line = line.trim();
+                if (line.startsWith('#EXTINF:')) {
+                    const titleMatch = line.match(/,(.+)$/);
+                    if (titleMatch) {
+                        currentChannel = { title: titleMatch[1], url: '' };
+                    }
+                } else if (line && !line.startsWith('#') && currentChannel) {
+                    currentChannel.url = line;
+                    channels.push(currentChannel);
+                    currentChannel = null;
+                }
+            });
+
+            return channels;
+        }
+
+        function displayChannels(channels) {
+            const channelList = document.getElementById('channelList');
+
+            channels.forEach((channel, index) => {
+                const channelElement = document.createElement('div');
+                channelElement.className = 'channel';
+                channelElement.tabIndex = 0;
+                channelElement.innerHTML = `
+                    <span class="channel-number">${index + 1}</span>
+                    <span class="channel-name">${channel.title}</span>
+                `;
+
+                channelElement.onclick = () => {
+                    document.querySelectorAll('.channel').forEach(el => el.classList.remove('active'));
+                    channelElement.classList.add('active');
+                    videoPlayer.src = channel.url;
+                    videoPlayer.play();
+                    currentChannelDisplay.textContent = channel.title;
+                };
+
+                channelList.appendChild(channelElement);
+            });
+        }
+
+        // Control con teclado
+        let lastKeyPress = {
+            key: '',
+            time: 0,
+            buffer: ''
+        };
+
+        document.addEventListener('keydown', (e) => {
+            const channels = document.querySelectorAll('.channel');
+            const currentIndex = Array.from(channels).findIndex(channel => channel.classList.contains('active'));
+            const currentTime = new Date().getTime();
+
+            // Manejar doble pulsación de tecla 1
+            if (e.key === '1') {
+                if (currentTime - lastKeyPress.time < 300) { // Doble pulsación detectada
+                    e.preventDefault();
+                    if (videoPlayer.requestFullscreen) {
+                        if (document.fullscreenElement === videoPlayer) {
+                            document.exitFullscreen();
+                        } else {
+                            videoPlayer.requestFullscreen();
+                        }
+                    }
+                }
+                lastKeyPress.time = currentTime;
+                return;
+            }
+
+            // Manejar números para selección directa de canal
+            if (/^[0-9]$/.test(e.key)) {
+                lastKeyPress.buffer += e.key;
+                setTimeout(() => {
+                    const channelNumber = parseInt(lastKeyPress.buffer) - 1;
+                    if (channelNumber >= 0 && channelNumber < channels.length) {
+                        channels[channelNumber].click();
+                        channels[channelNumber].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    }
+                    lastKeyPress.buffer = ''; // Limpiar buffer después de 1 segundo
+                }, 1000);
+                return;
+            }
+
+            switch(e.key) {
+                case 'ArrowUp':
+                case 'ArrowLeft':
+                    e.preventDefault();
+                    if (currentIndex > 0) {
+                        channels[currentIndex - 1].click();
+                        channels[currentIndex - 1].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    }
+                    break;
+                case 'ArrowDown':
+                case 'ArrowRight':
+                    e.preventDefault();
+                    if (currentIndex < channels.length - 1) {
+                        channels[currentIndex + 1].click();
+                        channels[currentIndex + 1].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    }
+                    break;
+                case 'Enter':
+                    if (!document.fullscreenElement) {
+                        document.documentElement.requestFullscreen();
+                    } else {
+                        document.exitFullscreen();
+                    }
+                    break;
+            }
+        });
+
+        // Controles de video
+        videoPlayer.removeAttribute('controls');
+
+        playPauseBtn.addEventListener('click', () => {
+            if (videoPlayer.paused) {
+                videoPlayer.play();
+                playPauseBtn.textContent = '⏸';
+            } else {
+                videoPlayer.pause();
+                playPauseBtn.textContent = '▶';
+            }
+        });
+
+        fullscreenBtn.addEventListener('click', () => {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+            } else {
+                document.exitFullscreen();
+            }
+        });
+
+        videoPlayer.addEventListener('timeupdate', () => {
+            if (videoPlayer.duration) {
+                const percentage = (videoPlayer.currentTime / videoPlayer.duration) * 100;
+                progress.style.width = `${percentage}%`;
+            }
+        });
+
+        progressBar.addEventListener('click', (e) => {
+            const rect = progressBar.getBoundingClientRect();
+            const pos = (e.clientX - rect.left) / progressBar.offsetWidth;
+            videoPlayer.currentTime = pos * videoPlayer.duration;
+        });
+
+        // Reloj
+        function updateClock() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('es-ES', {
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            const dateString = now.toLocaleDateString('es-ES', {
+                weekday: 'long',
+                day: 'numeric',
+                month: 'long'
+            });
+            
+            document.getElementById('clock').textContent = timeString;
+            document.getElementById('date').textContent = dateString.charAt(0).toUpperCase() + dateString.slice(1);
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // Configurar doble clic para pantalla completa del video
+        let lastClick = 0;
+        videoPlayer.addEventListener('click', (e) => {
+            const currentTime = new Date().getTime();
+            const timeDiff = currentTime - lastClick;
+
+            if (timeDiff < 300) { // Doble clic detectado (menos de 300ms entre clicks)
+                if (document.fullscreenElement) {
+                    // Si ya está en pantalla completa, solo toggleamos el video
+                    if (videoPlayer.requestFullscreen) {
+                        if (document.fullscreenElement === videoPlayer) {
+                            document.exitFullscreen();
+                        } else {
+                            videoPlayer.requestFullscreen();
+                        }
+                    }
+                } else {
+                    // Si no está en pantalla completa, ponemos el video en pantalla completa
+                    videoPlayer.requestFullscreen();
+                }
+            }
+            lastClick = currentTime;
+        });
+    </script>
+</body>
+</html>

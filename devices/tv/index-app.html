@@ -1,0 +1,377 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crisutf TV+</title>
+    <link rel="icon" type="image/png" href="/media/favicon.png">
+    <link href="https://fonts.cdnfonts.com/css/pf-dindisplay-pro-black-2" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/icon-styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <style>
+        :root {
+            --primary: #6366f1;          /* Color principal */
+            --primary-light: #818cf8;    /* Color principal claro */
+            --primary-dark: #4f46e5;     /* Color principal oscuro */
+            --accent: #ec4899;           /* Color de acento */
+            --accent-light: #f472b6;     /* Color de acento claro */
+            --bg-dark: #0f0f1a;          /* Fondo principal oscuro */
+            --bg-sidebar: #1a1a2e;       /* Fondo de la barra lateral */
+            --text: #f8fafc;             /* Texto principal */
+            --text-secondary: #a5b4fc;   /* Texto secundario */
+            --border: #2d2d42;           /* Bordes */
+            --card-bg: rgba(30, 30, 60, 0.5); /* Fondo de tarjetas */
+            --card-hover: rgba(40, 40, 80, 0.8); /* Hover de tarjetas */
+            --danger: #ef4444;
+            --success: #10b981;          /* Color de éxito */
+            --error: #ef4444;            /* Color de error */
+            --warning: #f59e0b;          /* Color de advertencia */
+            --border-color: var(--border);
+            --shadow: 0 8px 24px rgba(0, 0, 0, 0.3); /* Sombras */
+            --gradient-1: linear-gradient(135deg, var(--primary-light), var(--accent-light)); /* Gradiente 1 */
+            --gradient-2: linear-gradient(135deg, var(--primary), var(--accent)); /* Gradiente 2 */
+            --header-bg: rgba(15, 15, 26, 0.95); /* Fondo del encabezado */
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'PF DinDisplay Pro Black', sans-serif;
+        }
+
+        body {
+            background: var(--bg-dark);
+            color: var(--text);
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        .main-content {
+            width: 100%;
+            height: 100vh;
+            position: relative;
+        }
+
+        .video-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: black;
+        }
+
+        #videoPlayer {
+            width: 100%;
+            height: 100%;
+            max-height: 100vh;
+            object-fit: contain;
+        }
+
+        .app-title {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: var(--primary-light);
+            z-index: 10;
+            background: var(--gradient-1);
+            padding: 8px 15px;
+            border-radius: 8px;            
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .channel-indicator {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            color: var(--text);
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 1.2em;
+            z-index: 10;
+            display: none;
+            transition: opacity 0.3s;
+            border: 1px solid var(--primary);
+            box-shadow: 0 0 10px rgba(99, 102, 241, 0.5);
+        }
+        
+        .error-message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(255, 0, 0, 0.7);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 5px;
+            font-size: 20px;
+            z-index: 20;
+            text-align: center;
+            max-width: 80%;
+            display: none;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.7);
+        }
+
+        .channel-indicator.show {
+            display: block;
+            opacity: 1;
+        }
+
+        /* Eliminamos la animación de desvanecimiento ya que ahora queremos que permanezca visible */
+
+        @media (min-width: 1920px) {
+            .app-title {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-content">
+        <div class="video-container">
+            <h1 class="app-title">Crisutf TV+</h1>
+            <div class="channel-indicator" id="channelIndicator"></div>
+            <div class="error-message" id="errorMessage">El canal no está disponible en este momento</div>
+            <video id="videoPlayer" playsinline></video>
+        </div>
+    </div>
+
+    <script>
+        const videoPlayer = document.getElementById('videoPlayer');
+        const channelIndicator = document.getElementById('channelIndicator');
+        const errorMessage = document.getElementById('errorMessage');
+        let currentChannel = 0;
+        let channels = [];
+        let indicatorTimeout;
+        let errorTimeout;
+
+        function showChannelIndicator(number, name) {
+            channelIndicator.textContent = `${number}. ${name}`;
+            channelIndicator.classList.add('show');
+            clearTimeout(indicatorTimeout);
+            
+            // No establecemos un timeout para ocultar el indicador
+            // Solo se ocultará cuando detectemos un error o cuando el video esté cargando
+        }
+
+        const hls = new Hls({
+            maxBufferLength: 30,
+            maxMaxBufferLength: 600,
+            manifestLoadingTimeOut: 10000,
+            manifestLoadingMaxRetry: 3,
+            levelLoadingTimeOut: 10000,
+            levelLoadingMaxRetry: 3
+        });
+        
+        async function initializePlayer() {
+            try {
+                const response = await fetch('/files/v2.0/index.m3u');
+                if (!response.ok) throw new Error('Error al cargar la lista de canales');
+                const content = await response.text();
+                channels = parseM3U(content);
+                if (channels.length > 0) {
+                    loadVideo(channels[0].url);
+                    showChannelIndicator(1, channels[0].title);
+                }
+            } catch (error) {
+                console.error('Error:', error.message);
+            }
+        }
+
+        function parseM3U(content) {
+            const lines = content.split('\n');
+            const channels = [];
+            let currentChannel = null;
+
+            lines.forEach(line => {
+                line = line.trim();
+                if (line.startsWith('#EXTINF:')) {
+                    const titleMatch = line.match(/,(.+)$/);
+                    if (titleMatch) {
+                        currentChannel = { title: titleMatch[1], url: '' };
+                    }
+                } else if (line && !line.startsWith('#') && currentChannel) {
+                    currentChannel.url = line;
+                    channels.push(currentChannel);
+                    currentChannel = null;
+                }
+            });
+
+            return channels;
+        }
+
+        function loadVideo(url) {
+            // Ocultar mensaje de error al cambiar de canal
+            errorMessage.style.display = 'none';
+            clearTimeout(errorTimeout);
+            
+            // Mostrar el indicador de canal inmediatamente al cambiar
+            channelIndicator.classList.add('show');
+            
+            // Verificar si es un archivo MP4
+            if (url.toLowerCase().endsWith('.mp4')) {
+                // Para archivos MP4, usar directamente el elemento video
+                videoPlayer.src = url;
+                // Agregar un parámetro de tiempo para evitar el error 304
+                if (url.indexOf('?') === -1) {
+                    videoPlayer.src = url + '?t=' + new Date().getTime();
+                } else {
+                    videoPlayer.src = url + '&t=' + new Date().getTime();
+                }
+                
+                videoPlayer.play().catch((error) => {
+                    console.log('Reproducción automática bloqueada', error);
+                    channelIndicator.classList.remove('show');
+                    // Mostrar mensaje de error si no es un error de reproducción automática
+                    if (error.name !== 'NotAllowedError') {
+                        errorMessage.style.display = 'block';
+                    }
+                });
+            } else if (Hls.isSupported()) {
+                // Para streams HLS
+                hls.loadSource(url);
+                hls.attachMedia(videoPlayer);
+                hls.on(Hls.Events.MANIFEST_PARSED, () => {
+                    videoPlayer.play().catch((error) => {
+                        console.log('Reproducción automática bloqueada', error);
+                        channelIndicator.classList.remove('show');
+                        // Mostrar mensaje de error si no es un error de reproducción automática
+                        if (error.name !== 'NotAllowedError') {
+                            errorMessage.style.display = 'block';
+                        }
+                    });
+                });
+
+                hls.on(Hls.Events.ERROR, (event, data) => {
+                    // Ocultar el indicador de canal cuando hay un error
+                    channelIndicator.classList.remove('show');
+                    
+                    if (data.fatal) {
+                        // Mostrar mensaje de error para errores fatales
+                        errorMessage.style.display = 'block';
+                        
+                        switch(data.type) {
+                            case Hls.ErrorTypes.NETWORK_ERROR:
+                                console.error('Error de red en HLS:', data);
+                                hls.startLoad();
+                                break;
+                            case Hls.ErrorTypes.MEDIA_ERROR:
+                                console.error('Error de medio en HLS:', data);
+                                hls.recoverMediaError();
+                                break;
+                            default:
+                                console.error('Error fatal en HLS:', data);
+                                hls.destroy();
+                                break;
+                        }
+                    }
+                });
+            } else if (videoPlayer.canPlayType('application/vnd.apple.mpegurl')) {
+                videoPlayer.src = url;
+                videoPlayer.addEventListener('loadedmetadata', () => {
+                    videoPlayer.play().catch((error) => {
+                        console.log('Reproducción automática bloqueada', error);
+                        channelIndicator.classList.remove('show');
+                        // Mostrar mensaje de error si no es un error de reproducción automática
+                        if (error.name !== 'NotAllowedError') {
+                            errorMessage.style.display = 'block';
+                        }
+                    });
+                });
+            }
+            
+            // Establecer un temporizador para mostrar el mensaje de error si el video no carga en 10 segundos
+            errorTimeout = setTimeout(() => {
+                if (videoPlayer.readyState === 0) {
+                    errorMessage.style.display = 'block';
+                }
+            }, 10000);
+        }
+
+        document.addEventListener('keydown', (e) => {
+            switch(e.key) {
+                case 'ArrowUp':
+                case 'ArrowLeft':
+                    e.preventDefault();
+                    if (currentChannel > 0) {
+                        currentChannel--;
+                        loadVideo(channels[currentChannel].url);
+                        showChannelIndicator(currentChannel + 1, channels[currentChannel].title);
+                    }
+                    break;
+                case 'ArrowDown':
+                case 'ArrowRight':
+                    e.preventDefault();
+                    if (currentChannel < channels.length - 1) {
+                        currentChannel++;
+                        loadVideo(channels[currentChannel].url);
+                        showChannelIndicator(currentChannel + 1, channels[currentChannel].title);
+                    }
+                    break;
+            }
+        });
+
+        initializePlayer();
+
+        // Agregar event listeners para controlar la visibilidad del indicador de canal y mensaje de error
+        videoPlayer.addEventListener('error', (e) => {
+            console.error('Error en el video:', e);
+            // Ocultar el indicador de canal cuando hay un error
+            channelIndicator.classList.remove('show');
+            // Mostrar el mensaje de error
+            errorMessage.style.display = 'block';
+        });
+        
+        // Mantener visible el indicador brevemente y luego ocultarlo cuando el video comienza a reproducirse
+        videoPlayer.addEventListener('playing', () => {
+            // Asegurarse de que el indicador esté visible cuando el video comienza a reproducirse
+            channelIndicator.classList.add('show');
+            // Ocultar el mensaje de error
+            errorMessage.style.display = 'none';
+            
+            // Ocultar el indicador después de 3 segundos cuando el video está reproduciéndose correctamente
+            setTimeout(() => {
+                channelIndicator.classList.remove('show');
+            }, 3000);
+        });
+        
+        // Ocultar el indicador cuando el video se detiene o pausa
+        videoPlayer.addEventListener('pause', () => {
+            // No ocultamos el indicador en pausa para que el usuario sepa qué canal está viendo
+        });
+        
+        videoPlayer.addEventListener('ended', () => {
+            // Ocultar el indicador cuando el video termina
+            channelIndicator.classList.remove('show');
+        });
+        
+        // Detectar cuando no hay contenido (stalled)
+        videoPlayer.addEventListener('stalled', () => {
+            // Ocultar el indicador cuando el video se detiene por falta de datos
+            setTimeout(() => {
+                if (videoPlayer.readyState === 0) {
+                    channelIndicator.classList.remove('show');
+                    // Mostrar mensaje de error después de 5 segundos si sigue sin reproducirse
+                    errorMessage.style.display = 'block';
+                }
+            }, 5000); // Esperar 5 segundos antes de ocultar para dar tiempo a que se recupere
+        });
+        
+        // Agregar un event listener para detectar cuando el video puede reproducirse
+        videoPlayer.addEventListener('canplay', () => {
+            // Ocultar el mensaje de error cuando el video puede reproducirse
+            errorMessage.style.display = 'none';
+        });
+
+        if (navigator.userAgent.toLowerCase().indexOf('tv') > -1 || 
+            navigator.userAgent.toLowerCase().indexOf('android') > -1) {
+            document.body.style.fontSize = '1.2em';
+        }
+    </script>
+</body>
+</html>

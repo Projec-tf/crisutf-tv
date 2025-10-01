@@ -1,0 +1,120 @@
+{
+  "updates": [
+    {
+      "date": "25/09/2025",
+      "title": "Aviso de Descontinuacion de mantenimiento y soporte",
+      "description": "Actualmente, los canales proporcionados por el server world-proxifier.xyz ha sido bloqueador por la idiotez de LaLiga y no se dara mantenimiento si se quiere hacer uns nueva raiz desde este proyecto sera mencionado."
+    },
+    {
+      "date": "14/09/2025",
+      "title": "Actualización de los canales",
+      "description": "Actualmente, los canales proporcionados por el server 49, 52 y 57 estan teniendo problemas pero se añadieron nuevos Canales."
+    },
+    {
+      "date": "10/09/2025",
+      "title": "Actualización de los canales",
+      "description": "Actualmente, los canales proporcionados por Pluto TV presentan problemas de compatibilidad con nuestra aplicación y serán retirados próximamente."
+    },
+    {
+      "date": "27/08/2025",
+      "title": "Actualización de los colores y diseños",
+      "description": "La web y pagina han recibido una actualización de los colores y diseños en la web y en la app."
+    },
+    {
+      "date": "24/08/2025",
+      "title": "Recuperación de canales",
+      "description": "Muchos de los canales que estaban por el server del IP 50 puerto 85 se cayó y se recuperó. Se añadieron más canales como Warner TV y otros. Todos los canales que tengan ⚠️ es que fueron afectados y aún no se encontró su server."
+    },
+    {
+      "date": "03/07/2025",
+      "title": "Mantenimiento y reconstrucción de la base del sitio web",
+      "description": "Del 03/07 a las 18:57 al 10/07 a las 21:00 (hora ES)."
+    },
+    {
+      "date": "01/07/2025",
+      "title": "Nuevos canales",
+      "description": "AXN, Discovery, Iberalia, MTV, Somos, TCM"
+    },
+    {
+      "date": "30/06/2025",
+      "title": "Mini mantenimiento en las páginas",
+      "description": "La página funcionará pero se estará modificando"
+    },
+    {
+      "date": "30/06/2025",
+      "title": "Revisión para corrección para la APP de Android TV",
+      "description": "La APP de Android TV está un poco inestable"
+    },
+    {
+      "date": "30/06/2025",
+      "title": "Nuevos canales",
+      "description": "Aragón TV, À Punt TV, BBC Drama, BEIN SPORT EXTRA Ñ, Calle 13 Pluto TV (Cine Clásico, MTV Originals, Acción, Cocina, Kids y el Classics y Telenovelas), El País, Esport3, ETB2, Rakuten TV (Euronews), EUROSPORT 1 y 2, HBO Plus, HBO Plus, La Mega Mundial, National Geographic, Negocios, RNE para todos, SKY SPORTS & LaLiga y WWE (Sin sonido)"
+    },
+    {
+      "date": "27/06/2025",
+      "title": "APP oficial para PC",
+      "description": "Lanzada la app para PC. Ya no se necesita Python."
+    },
+    {
+      "date": "26/06/2025",
+      "title": "Mantenimiento",
+      "description": "Del 26/06 a las 22:00 al 28/06 a las 22:00 (hora ES)."
+    },
+    {
+      "date": "22/06/2025",
+      "title": "Mantenimiento",
+      "description": "Del 22/06 a las 22:41 al 23/06 a las 22:00 (hora ES)."
+    },
+    {
+      "date": "22/06/2025",
+      "title": "APP para móvil y TV",
+      "description": "Lanzada la app para Android, tablet y Smart TV."
+    },
+    {
+      "date": "22/06/2025",
+      "title": "Canal A3Series",
+      "description": "Nuevo canal añadido."
+    },
+    {
+      "date": "20/06/2025",
+      "title": "Mantenimiento + nuevo diseño",
+      "description": "Mantenimiento con cambios en la paleta de colores."
+    },
+    {
+      "date": "18/06/2025",
+      "title": "Rakuten TV",
+      "description": "Añadidos 4 canales nuevos. Total: 12."
+    },
+    {
+      "date": "18/06/2025",
+      "title": "Mantenimiento técnico",
+      "description": "Desde las 00:20 hasta las 16:00 (hora ES)."
+    },
+    {
+      "date": "06/06/2025",
+      "title": "Nuevos canales",
+      "description": "8madrid TV, AMC, BabyTV, FIFA+, HIT TV, y más."
+    },
+    {
+      "date": "31/05/2025",
+      "title": "Actualización grande",
+      "description": "Nuevo diseño e importantes mejoras."
+    },
+    {
+      "date": "24/04/2025",
+      "title": "Canales rumanos",
+      "description": "Añadidos canales de Rumanía. (Se ocultaron por ahora para futuras actualizaciones)"
+    },
+    {
+      "date": "17/04/2025",
+      "title": "Canales españoles",
+      "description": "Se añadieron canales de España."
+    },
+    {
+      "date": "15/04/2025",
+      "title": "Inicio del proyecto",
+      "description": "Lanzamiento de Crisutf TV+."
+    }
+  ]
+
+}

@@ -1,0 +1,3 @@
+Dia: 01/10/25
+    Cambios:
+        Se puso el HTML de la version v1.0 porque la v2.0 daba fallos y errores
