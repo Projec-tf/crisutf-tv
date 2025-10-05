@@ -416,7 +416,7 @@
                     console.log('No se pudo activar pantalla completa automáticamente');
                 });
 
-                const response = await fetch('/files/v2.0/index.m3u');
+                const response = await fetch('/files/index.m3u');
                 if (!response.ok) throw new Error('No se pudo cargar la lista de canales');
                 const content = await response.text();
                 const channels = parseM3U(content);

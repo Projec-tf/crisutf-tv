@@ -148,12 +148,7 @@ ${/* Tu bloque HTML completo de compatibilidad va aquí */''}
                                             <div class="channel-count">
                                                 <i class="fas fa-flag"></i>
                                                 <span>Samsung TV: 4 canales</span>
-                                                </div>
-                                                <div class="channel-count">
-                                                    <i class="fas fa-flag"></i>
-                                                    <span>Pluto TV: 13 canales</span>
-                                                    </div>
-                                                </div>                                                
+                                                </div>                                             
                                             </div>
   
                                             <div class="compatibility-table">
@@ -211,16 +206,6 @@ ${/* Tu bloque HTML completo de compatibilidad va aquí */''}
   <td>
     <strong>Canales Samsung TV</strong>
     <div class="channel-list">Kanal D Drama, People are Awesome, The Pet Collective y Trace Sport Stars</div>
-  </td>
-  <td><span class="status-tag success">✓</span></td>
-  <td><span class="status-tag success">✓</span></td>
-  <td><span class="status-tag success">✓</span></td>
-  <td><span class="status-tag success">✓</span></td>
-</tr>
-<tr>
-  <td>
-    <strong>Canales Pluto TV</strong>
-    <div class="channel-list">BBC Drama, Cine Clasico, MTV Originals, Pluto Accion / Cocina / Kids Classics / Kids / Telenovelas</div>
   </td>
   <td><span class="status-tag success">✓</span></td>
   <td><span class="status-tag success">✓</span></td>
@@ -335,10 +320,10 @@ function loadDownloadPage(container) {
     <h1><img src="/media/icons/download.svg" alt="Download" class="svg-icon"/> Descargar App</h1>
     <p>Ya está disponible la app para TV (Android TV Sys), Móvil/Tablet, PC y en modo servidor local. Selecciona tu versión preferida:</p>
     <div class="download-grid">
-      <a href="https://github.com/crisutf/Crisutv/releases/download/V2.0/crisutf.tv-mobile.apk" class="download-btn"><span class="download-icon"><img src="/media/icons/mobile.svg" alt="Mobile" class="svg-icon-small"/></span><span class="download-text"><strong>Android (V2.0)</strong><small>Para teléfonos y tablets</small></span></a>
-      <a href="https://github.com/crisutf/Crisutv/releases/download/V2.0/crisutf.tv-tv.apk" class="download-btn"><span class="download-icon"><img src="/media/icons/tv.svg" alt="TV" class="svg-icon-small"/></span><span class="download-text"><strong>Android TV (V2.0)</strong><small>Para Smart TV y TV Box</small></span></a>
-      <a href="https://github.com/crisutf/Crisutv/releases/download/V2.0/crisutf.tv-pc.exe" class="download-btn"><span class="download-icon"><img src="/media/icons/computer.svg" alt="Computer" class="svg-icon-small"/></span><span class="download-text"><strong>Windows (V2.0)</strong><small>Para computadoras</small></span></a>
-      <a href="https://github.com/crisutf/Crisutv/releases/download/V1.0/crisutf.tv-server.local.exe" class="download-btn"><span class="download-icon"><img src="/media/icons/server.svg" alt="Server" class="svg-icon-small"/></span><span class="download-text"><strong>Modo Servidor (V1.0)<h5>(Fuera de soporte)</h5></strong><small>Para uso en red local</small></span></a>
+      <a href="https://github.com/Projec-tf/crisutf-tv/releases/download/v2.1.0/crisutf.tv-mobile.apk" class="download-btn"><span class="download-icon"><img src="/media/icons/mobile.svg" alt="Mobile" class="svg-icon-small"/></span><span class="download-text"><strong>Android (V2.0)</strong><small>Para teléfonos y tablets</small></span></a>
+      <a href="https://github.com/Projec-tf/crisutf-tv/releases/download/v2.1.0/crisutf.tv-tv.apk" class="download-btn"><span class="download-icon"><img src="/media/icons/tv.svg" alt="TV" class="svg-icon-small"/></span><span class="download-text"><strong>Android TV (V2.0)</strong><small>Para Smart TV y TV Box</small></span></a>
+      <a href="https://github.com/Projec-tf/crisutf-tv/releases/download/v2.1.0/crisutf.tv-pc.exe" class="download-btn"><span class="download-icon"><img src="/media/icons/computer.svg" alt="Computer" class="svg-icon-small"/></span><span class="download-text"><strong>Windows (V2.0)</strong><small>Para computadoras</small></span></a>
+      <a href="https://github.com/Projec-tf/crisutf-tv/releases/download/v1.0/crisutf.tv-server.local.exe" class="download-btn"><span class="download-icon"><img src="/media/icons/server.svg" alt="Server" class="svg-icon-small"/></span><span class="download-text"><strong>Modo Servidor (V1.0)<h5>(Fuera de soporte)</h5></strong><small>Para uso en red local</small></span></a>
     </div>
   </div>
 </div>`;

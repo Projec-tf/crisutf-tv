@@ -170,7 +170,7 @@
         
         async function initializePlayer() {
             try {
-                const response = await fetch('/files/v2.0/index.m3u');
+                const response = await fetch('/files/index.m3u');
                 if (!response.ok) throw new Error('Error al cargar la lista de canales');
                 const content = await response.text();
                 channels = parseM3U(content);

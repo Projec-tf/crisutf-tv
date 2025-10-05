@@ -1,6 +1,11 @@
 {
   "updates": [
     {
+      "date": "05/10/2025",
+      "title": "Aviso de soporte",
+      "description": "Actualmente, los canales proporcionados por el server world-proxifier.xyz estan teniendo problemas y estamos arreglandolo el problema."
+    },
+    {
       "date": "01/10/2025",
       "title": "Aviso de soporte",
       "description": "Actualmente, los canales proporcionados por el server world-proxifier.xyz ha sido bloqueador por LaLiga y se necesitara de VPN o usar una compania pequeña osea no DIGI, Orange, Movistar, Vodafone, etc..."
@@ -118,4 +123,3 @@
   ]
 
 }
-

@@ -745,7 +745,7 @@
                 // Intentar cargar la lista de canales con manejo de errores mejorado
                 try {
                     // Para servidor local, usar ruta relativa
-                    const response = await fetch('/files/v2.0/index.m3u');
+                    const response = await fetch('/files/index.m3u');
                     if (!response.ok) throw new Error(`No se pudo cargar la lista de canales (${response.status})`);
                     const content = await response.text();
                     const channels = parseM3U(content);
@@ -773,10 +773,10 @@
                     // Intentar con rutas alternativas
                     try {
                         // Intentar con otras rutas
-                        const altResponse = await fetch('/files/v2.0/index.m3u');
+                        const altResponse = await fetch('/files/index.m3u');
                         if (!altResponse.ok) {
                             // Intentar con ruta absoluta
-                            const absResponse = await fetch('/files/v2.0/index.m3u');
+                            const absResponse = await fetch('/files/index.m3u');
                             if (!absResponse.ok) throw new Error('Todas las rutas alternativas fallaron');
                             return await processM3UResponse(absResponse);
                         }
