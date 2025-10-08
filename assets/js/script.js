@@ -229,7 +229,7 @@ ${/* Tu bloque HTML completo de compatibilidad va aquí */''}
   <div class="restrictions-card">
     <h2><i class="fas fa-shield-alt"></i> Soporte técnico</h2>
     <div class="restrictions-content">
-      <p><i class="fas fa-envelope"></i> Si tienes problemas, escríbeme a <a href="mailto:wtf.crisu@gmail.com">wtf.crisu@gmail.com</a>.</p>
+      <p><i class="fas fa-envelope"></i> Si tienes problemas, escríbeme a <a href="mailto:project_tf@googlegroups.com">Projectf</a>.</p>
     </div>
   </div>
 `;
@@ -440,3 +440,4 @@ function loadTermsPage(container) {
 </div>
 `;
 }
+
